@@ -20,7 +20,7 @@ class CoSign {
     getUserToken() {
         return new Promise((resolve, reject) => {
             this._cosignCookie().then(d => {
-                this._cosignLogin(config, d).then(c => {
+                this._cosignLogin(this.config, d).then(c => {
                     this._getJWT('https://portal.lancaster.ac.uk/portal/api/profile', c).then(p => {
                         this.tokenGenerated = true;
                         this.config.token = p;
@@ -138,3 +138,4 @@ class CoSign {
 
 }
 
+module.exports = CoSign;

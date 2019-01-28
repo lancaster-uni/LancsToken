@@ -1,6 +1,6 @@
 {
-  "name": "LanCheckin",
-  "version": "1.0.2",
+  "name": "lancstoken",
+  "version": "1.0.3",
   "main": "index.js",
   "license": "MIT",
   "author": "krisdev",
