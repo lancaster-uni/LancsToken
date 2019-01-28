@@ -16,9 +16,11 @@ var account = new CoSign({
     user: "Username",
     pass: "Password",
 });
-account.getUserToken().then((token, cookie)=>{
-    //token & cookie
+account.getUserToken().then(()=>{
+    console.log(account.token, account.cookie);
 })
+
+
 account.token //user token
 account.cookie //user cookie
 ```

@@ -23,9 +23,9 @@ class CoSign {
                 _cosignLogin(this.config, d).then(c => {
                     _getJWT('https://portal.lancaster.ac.uk/portal/api/profile', c).then(p => {
                         this.tokenGenerated = true;
-                        this.config.token = p;
-                        this.config.cookie = c;
-                        resolve(p);
+                        this.config.token = p[0];
+                        this.config.cookie = c[1];
+                        resolve(p[0]);
                     }).catch(e => {
                         reject(e);
                     })
@@ -121,9 +121,10 @@ function _getJWT(t, cookie) {
                         var sc = resp.headers['set-cookie'].toString().replace('\u0000', '');
                         request(n, { followRedirect: false, headers: { 'Cookie': sc } }, (err, resp, body) => {
                             if (err) reject(err);
+                            console.log(sc);
                             var u = new URL(resp.headers['location'].toString());
                             var c = u.searchParams.get("jwt");
-                            resolve(c, sc);
+                            resolve([c, sc]);
                         })
                     })
                 })
