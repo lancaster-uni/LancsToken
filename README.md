@@ -2,6 +2,8 @@
 Generate CoSign Tokens for Lancaster University
 This code is meant for educational purposes only.
 
+[![npm version](https://badge.fury.io/js/lancstoken.svg)](https://badge.fury.io/js/lancstoken)
+
 # Installation:
 ```sh
 yarn add lancstoken
