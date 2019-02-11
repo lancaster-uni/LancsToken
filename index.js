@@ -24,7 +24,7 @@ class CoSign {
                     _getJWT('https://portal.lancaster.ac.uk/portal/api/profile', c).then(p => {
                         this.tokenGenerated = true;
                         this.config.token = p[0];
-                        this.config.cookie = c[1];
+                        this.config.cookie = p[1];
                         resolve(p[0]);
                     }).catch(e => {
                         reject(e);
