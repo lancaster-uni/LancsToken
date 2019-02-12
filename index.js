@@ -1,5 +1,5 @@
-var request = require('request');
-var randomstring = require('randomstring');
+import request from 'request';
+import randomstring from 'randomstring';
 
 class CoSign {
     /**
@@ -60,7 +60,7 @@ class CoSign {
 
 function _cosignCookie() {
     return new Promise((resolve, reject) => {
-        var uri = "https://weblogin.lancs.ac.uk/login/?cosign-https-portal.lancaster.ac.uk&https://portal.lancaster.ac.uk/student_portal";
+        const uri = "https://weblogin.lancs.ac.uk/login/?cosign-https-portal.lancaster.ac.uk&https://portal.lancaster.ac.uk/student_portal";
         request(uri, (err, resp, body) => {
             if (err) reject(err);
             resolve(resp.headers['set-cookie']);
@@ -70,11 +70,11 @@ function _cosignCookie() {
 
 function _cosignLogin(config, cookie) {
     return new Promise((resolve, reject) => {
-        var user = config.user;
-        var pass = config.pass;
+        const user = config.user;
+        const pass = config.pass;
 
-        var loginUrl = "https://weblogin.lancs.ac.uk/login/";
-        var opts = {
+        const loginUrl = "https://weblogin.lancs.ac.uk/login/";
+        const opts = {
             method: 'POST',
             url: loginUrl,
             headers: {
@@ -101,7 +101,7 @@ function _cosignLogin(config, cookie) {
 
 function _getJWT(t, cookie) {
     return new Promise((resolve, reject) => {
-        var url = `https://cisweb.lancaster.ac.uk/jwt-proxy-auth?issuer=DSP&return_to=`;
+        const url = `https://cisweb.lancaster.ac.uk/jwt-proxy-auth?issuer=DSP&return_to=`;
 
         const e = randomstring.generate({
             length: 50,
@@ -115,15 +115,15 @@ function _getJWT(t, cookie) {
                 if (err) reject(err);
                 request("https://weblogin.lancs.ac.uk" + resp.headers['location'], { followRedirect: false, headers: { 'Cookie': cookie } }, (err, resp, body) => {
                     if (err) reject(err);
-                    var sc = resp.headers['set-cookie'];
+                    const sc = resp.headers['set-cookie'];
                     request(resp.headers['location'], { followRedirect: false, headers: { 'Cookie': sc } }, (err, resp, body) => {
                         if (err) reject(err);
-                        var sc = resp.headers['set-cookie'].toString().replace('\u0000', '');
+                        const sc = resp.headers['set-cookie'].toString().replace('\u0000', '');
                         request(n, { followRedirect: false, headers: { 'Cookie': sc } }, (err, resp, body) => {
                             if (err) reject(err);
                             console.log(sc);
-                            var u = new URL(resp.headers['location'].toString());
-                            var c = u.searchParams.get("jwt");
+                            const u = new URL(resp.headers['location'].toString());
+                            const c = u.searchParams.get("jwt");
                             resolve([c, sc]);
                         })
                     })
