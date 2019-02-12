@@ -1,5 +1,5 @@
-import request from 'request';
-import randomstring from 'randomstring';
+import request from "request";
+import randomstring from "randomstring";
 
 class CoSign {
     /**
@@ -21,21 +21,21 @@ class CoSign {
         return new Promise((resolve, reject) => {
             _cosignCookie().then(d => {
                 _cosignLogin(this.config, d).then(c => {
-                    _getJWT('https://portal.lancaster.ac.uk/portal/api/profile', c).then(p => {
+                    _getJWT("https://portal.lancaster.ac.uk/portal/api/profile", c).then(p => {
                         this.tokenGenerated = true;
                         this.config.token = p[0];
                         this.config.cookie = p[1];
                         resolve(p[0]);
                     }).catch(e => {
                         reject(e);
-                    })
+                    });
                 }).catch(e => {
                     reject(e);
-                })
+                });
             }).catch(e => {
                 reject(e);
-            })
-        })
+            });
+        });
     }
 
     /**
@@ -63,9 +63,9 @@ function _cosignCookie() {
         const uri = "https://weblogin.lancs.ac.uk/login/?cosign-https-portal.lancaster.ac.uk&https://portal.lancaster.ac.uk/student_portal";
         request(uri, (err, resp, body) => {
             if (err) reject(err);
-            resolve(resp.headers['set-cookie']);
+            resolve(resp.headers["set-cookie"]);
         });
-    })
+    });
 }
 
 function _cosignLogin(config, cookie) {
@@ -75,28 +75,28 @@ function _cosignLogin(config, cookie) {
 
         const loginUrl = "https://weblogin.lancs.ac.uk/login/";
         const opts = {
-            method: 'POST',
+            method: "POST",
             url: loginUrl,
             headers: {
-                'Cookie': cookie
+                "Cookie": cookie
             },
             form: {
-                required: '',
-                ref: 'https://myaccount.lancs.ac.uk',
-                service: 'cosign-https-myaccount.lancs.ac.uk',
-                state: 'login',
+                required: "",
+                ref: "https://myaccount.lancs.ac.uk",
+                service: "cosign-https-myaccount.lancs.ac.uk",
+                state: "login",
                 login: user,
                 password: pass,
-                otp: '',
-                doLogin: 'Login'
+                otp: "",
+                doLogin: "Login"
             },
-        }
+        };
         request(opts, (err, resp, body) => {
             if (err) reject(err);
-            resolve(resp.headers['set-cookie']);
-        })
+            resolve(resp.headers["set-cookie"]);
+        });
 
-    })
+    });
 }
 
 function _getJWT(t, cookie) {
@@ -105,32 +105,32 @@ function _getJWT(t, cookie) {
 
         const e = randomstring.generate({
             length: 50,
-            charset: 'alphabetic'
+            charset: "alphabetic"
         });
         const n = `${url}${t}&state=${e}`;
 
-        request(n, { followRedirect: false, headers: { 'Cookie': cookie } }, (err, resp, body) => {
+        request(n, { followRedirect: false, headers: { "Cookie": cookie } }, (err, resp, body) => {
             if (err) reject(err);
-            request(resp.headers['location'], { followRedirect: false, headers: { 'Cookie': cookie } }, (err, resp, body) => {
+            request(resp.headers["location"], { followRedirect: false, headers: { "Cookie": cookie } }, (err, resp, body) => {
                 if (err) reject(err);
-                request("https://weblogin.lancs.ac.uk" + resp.headers['location'], { followRedirect: false, headers: { 'Cookie': cookie } }, (err, resp, body) => {
+                request("https://weblogin.lancs.ac.uk" + resp.headers["location"], { followRedirect: false, headers: { "Cookie": cookie } }, (err, resp, body) => {
                     if (err) reject(err);
-                    const sc = resp.headers['set-cookie'];
-                    request(resp.headers['location'], { followRedirect: false, headers: { 'Cookie': sc } }, (err, resp, body) => {
+                    const sc = resp.headers["set-cookie"];
+                    request(resp.headers["location"], { followRedirect: false, headers: { "Cookie": sc } }, (err, resp, body) => {
                         if (err) reject(err);
-                        const sc = resp.headers['set-cookie'].toString().replace('\u0000', '');
-                        request(n, { followRedirect: false, headers: { 'Cookie': sc } }, (err, resp, body) => {
+                        const sc = resp.headers["set-cookie"].toString().replace("\u0000", "");
+                        request(n, { followRedirect: false, headers: { "Cookie": sc } }, (err, resp, body) => {
                             if (err) reject(err);
                             console.log(sc);
-                            const u = new URL(resp.headers['location'].toString());
+                            const u = new URL(resp.headers["location"].toString());
                             const c = u.searchParams.get("jwt");
                             resolve([c, sc]);
-                        })
-                    })
-                })
-            })
+                        });
+                    });
+                });
+            });
         })
-    })
+    });
 
 }
 
