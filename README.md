@@ -14,14 +14,15 @@ npm i lancstoken
 
 # Usage:
 ```js
-const CoSign = require('lancstoken');
-var account = new CoSign({
+import CoSign from 'lancstoken';
+
+const account = new CoSign({
     user: "Username",
     pass: "Password",
 });
 account.getUserToken().then(()=>{
     console.log(account.token, account.cookie);
-})
+});
 
 
 account.token //user token
